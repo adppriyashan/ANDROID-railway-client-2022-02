@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">railwayandroid</string>
+    <string name="memory_key">memory_credentials</string>
 </resources>
