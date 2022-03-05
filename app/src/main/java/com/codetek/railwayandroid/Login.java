@@ -11,7 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codetek.railwayandroid.Models.CustomResponse;
 import com.codetek.railwayandroid.Models.CustomUtils;
+import com.codetek.railwayandroid.Models.User;
+import com.google.gson.Gson;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -71,25 +74,46 @@ public class Login extends AppCompatActivity  implements Validator.ValidationLis
     }
 
     private void loginProcess(){
-        try {
-            JSONObject _loginCredentails=new JSONObject();
-            _loginCredentails.put("email",username.getText().toString());
-            _loginCredentails.put("password",password.getText().toString());
-            Response resp=new CustomUtils(Login.this,"login").doPost(_loginCredentails);
-            if(resp.isSuccessful()){
+        progress.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject _loginCredentails=new JSONObject();
+                    _loginCredentails.put("email",username.getText().toString());
+                    _loginCredentails.put("password",password.getText().toString());
+                    CustomResponse resp=new CustomUtils(Login.this,"login").doPost(_loginCredentails,false);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            progress.hide();
+                        }
+                    });
 
-                JSONObject respData=new JSONObject(resp.body().toString());
-
-                if(resp.code()==200){
-                    //save auth key
-                    startActivity(new Intent(Login.this,Dashboard.class));
-                }else{
-                    Toast.makeText(Login.this, "", Toast.LENGTH_SHORT).show();
+                        if(resp.code()==200){
+                            JSONObject data=new JSONObject(new JSONObject(resp.body().toString()).get("data").toString());
+                            CustomUtils.authKey=data.get("token").toString();
+                            CustomUtils.userData=new Gson().fromJson(data.get("user").toString(), User.class);
+                            System.out.println(CustomUtils.userData.getName());
+                            startActivity(new Intent(Login.this,Dashboard.class));
+                        }else{
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    progress.hide();
+                                    Toast.makeText(Login.this,"Unauthorized Credentials",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                }catch(Exception e){
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            progress.hide();
+                            Toast.makeText(Login.this,"Something Wrong",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
-        }catch(Exception e){
-            Toast.makeText(Login.this,"Something Wrong",Toast.LENGTH_SHORT).show();
-        }
+        }).start();
     }
 
     private void initProcess() {
