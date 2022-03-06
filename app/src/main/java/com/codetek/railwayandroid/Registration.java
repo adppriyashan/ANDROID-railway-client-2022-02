@@ -114,6 +114,8 @@ public class Registration extends AppCompatActivity implements Validator.Validat
                         }
                     });
 
+                    System.out.println(resp.code());
+
                     if(resp.code()==200){
                         runOnUiThread(new Runnable() {
                             public void run() {

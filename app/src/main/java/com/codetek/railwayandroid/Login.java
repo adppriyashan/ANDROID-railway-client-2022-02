@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.codetek.railwayandroid.Models.CustomResponse;
 import com.codetek.railwayandroid.Models.CustomUtils;
+import com.codetek.railwayandroid.Models.Location;
 import com.codetek.railwayandroid.Models.Ticket;
 import com.codetek.railwayandroid.Models.User;
 import com.google.gson.Gson;
@@ -98,6 +99,9 @@ public class Login extends AppCompatActivity  implements Validator.ValidationLis
                             CustomUtils.userData=new Gson().fromJson(data.get("user").toString(), User.class);
                             CustomUtils.tickets=new ArrayList<>();
                             CustomUtils.tickets=new Gson().fromJson(data.get("tickets").toString(), new TypeToken<List<Ticket>>(){}.getType());
+                            CustomUtils.locations=new ArrayList<>();
+                            CustomUtils.locations=new Gson().fromJson(data.get("locations").toString(), new TypeToken<List<Location>>(){}.getType());
+
                             startActivity(new Intent(Login.this,Dashboard.class));
                         }else{
                             runOnUiThread(new Runnable() {

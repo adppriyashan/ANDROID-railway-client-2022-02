@@ -24,6 +24,9 @@ public class CustomUtils {
     public static String authKey;
     public static User userData;
     public static ArrayList<Ticket> tickets;
+    public static ArrayList<Location> locations;
+
+    public static Train selectedTrain;
 
     private SharedPreferences sharedPref;
 

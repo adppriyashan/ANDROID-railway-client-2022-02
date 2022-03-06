@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.codetek.railwayandroid.Models.CustomUtils;
 import com.codetek.railwayandroid.Models.Ticket;
 import com.codetek.railwayandroid.RecyclerViews.TicketRecyclerAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 
@@ -23,11 +24,12 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    TextView name,email;
+    TextView name,email,dashboardEmptyText;
     ImageView logout;
     boolean doubleBackToExitPressedOnce;
     RecyclerView ticketsListView;
     TicketRecyclerAdapter ticketRecyclerAdapter;
+    FloatingActionButton newBooking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,14 @@ public class Dashboard extends AppCompatActivity {
     private void initProcess() {
         name=findViewById(R.id.dashboard_name);
         email=findViewById(R.id.dashboard_email);
+        dashboardEmptyText=findViewById(R.id.dashboard_empty);
         logout=findViewById(R.id.dashboard_logout);
+        newBooking=findViewById(R.id.dashboard_new_booking);
         doubleBackToExitPressedOnce = false;
+
+        if(CustomUtils.tickets.size()>0){
+            dashboardEmptyText.setVisibility(View.INVISIBLE);
+        }
 
         ticketsListView=findViewById(R.id.dashboard_recycler_view);
         ticketRecyclerAdapter=new TicketRecyclerAdapter(CustomUtils.tickets);
@@ -51,6 +59,13 @@ public class Dashboard extends AppCompatActivity {
 
         name.setText(CustomUtils.userData.getName());
         email.setText(CustomUtils.userData.getEmail());
+
+        newBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Dashboard.this,Booking.class));
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
