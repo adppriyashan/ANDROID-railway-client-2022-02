@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.codetek.railwayandroid.Models.CustomResponse;
 import com.codetek.railwayandroid.Models.CustomUtils;
+import com.codetek.railwayandroid.Models.Ticket;
 import com.codetek.railwayandroid.Models.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -22,6 +24,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Response;
@@ -93,7 +96,8 @@ public class Login extends AppCompatActivity  implements Validator.ValidationLis
                             JSONObject data=new JSONObject(new JSONObject(resp.body().toString()).get("data").toString());
                             CustomUtils.authKey=data.get("token").toString();
                             CustomUtils.userData=new Gson().fromJson(data.get("user").toString(), User.class);
-                            System.out.println(CustomUtils.userData.getName());
+                            CustomUtils.tickets=new ArrayList<>();
+                            CustomUtils.tickets=new Gson().fromJson(data.get("tickets").toString(), new TypeToken<List<Ticket>>(){}.getType());
                             startActivity(new Intent(Login.this,Dashboard.class));
                         }else{
                             runOnUiThread(new Runnable() {
@@ -115,6 +119,9 @@ public class Login extends AppCompatActivity  implements Validator.ValidationLis
             }
         }).start();
     }
+
+    @Override
+    public void onBackPressed() {}
 
     private void initProcess() {
         goToRegister=findViewById(R.id.login_go_to_register);

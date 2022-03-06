@@ -7,6 +7,8 @@ import com.codetek.railwayandroid.R;
 
 import org.json.JSONObject;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,6 +23,7 @@ public class CustomUtils {
     private OkHttpClient client;
     public static String authKey;
     public static User userData;
+    public static ArrayList<Ticket> tickets;
 
     private SharedPreferences sharedPref;
 
