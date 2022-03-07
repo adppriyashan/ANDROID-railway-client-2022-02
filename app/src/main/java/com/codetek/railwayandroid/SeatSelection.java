@@ -8,10 +8,13 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.codetek.railwayandroid.Models.CustomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,31 +24,14 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
 
     ImageView backbtn;
 
+    Button confirmationButton;
+
     //U - not available
     //A - Available
     //R Reserved
     //_ Space
 
-    String seats = "_UUUUUUAAAAARRRR_/"
-            + "_________________/"
-            + "UU__AAAARRRRR__RR/"
-            + "UU__UUUAAAAAA__AA/"
-            + "AA__AAAAAAAAA__AA/"
-            + "AA__AARUUUURR__AA/"
-            + "UU__UUUA_RRRR__AA/"
-            + "AA__AAAA_RRAA__UU/"
-            + "AA__AARR_UUUU__RR/"
-            + "AA__UUAA_UURR__RR/"
-            + "_________________/"
-            + "UU_AAAAAAAUUUU_RR/"
-            + "RR_AAAAAAAAAAA_AA/"
-            + "AA_UUAAAAAUUUU_AA/"
-            + "AA_AAAAAAUUUUU_AA/"
-            + "UU_AAAAAAAUUUU_RR/"
-            + "RR_AAAAAAAAAAA_AA/"
-            + "AA_UUAAAAAUUUU_AA/"
-            + "AA_AAAAAAUUUUU_AA/"
-            + "_________________/";
+    String seats = "";
 
     List<TextView> seatViewList = new ArrayList<>();
     int seatSize = 100;
@@ -61,6 +47,14 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
         setContentView(R.layout.activity_seat_selection);
 
         backbtn=findViewById(R.id.seats_back);
+        confirmationButton=findViewById(R.id.seat_booking_confirmation);
+
+        confirmationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println(selectedIds);
+            }
+        });
 
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +62,50 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
                 onBackPressed();
             }
         });
+
+        int firstClassCheckIndex=1;
+        for (int firstClasses=0;firstClasses<CustomUtils.selectedTrain.getFirstclass();firstClasses++){
+            seats+="A";
+            if(firstClassCheckIndex==2){
+                seats+="__";
+            }
+            if(firstClassCheckIndex==4){
+                seats+="/";
+                firstClassCheckIndex=1;
+            }else{
+                firstClassCheckIndex++;
+            }
+        }
+        seats+="/";
+        seats+="/";
+        int secondClassCheckIndex=1;
+        for (int secondClasses=0;secondClasses<CustomUtils.selectedTrain.getSecondclass();secondClasses++){
+            seats+="B";
+            if(secondClassCheckIndex==2){
+                seats+="__";
+            }
+            if(secondClassCheckIndex==4){
+                seats+="/";
+                secondClassCheckIndex=1;
+            }else{
+                secondClassCheckIndex++;
+            }
+        }
+        seats+="/";
+        seats+="/";
+        int thirdClassCheckIndex=1;
+        for (int thirdClasses=0;thirdClasses<CustomUtils.selectedTrain.getThirdclass();thirdClasses++){
+            seats+="C";
+            if(thirdClassCheckIndex==2){
+                seats+="__";
+            }
+            if(thirdClassCheckIndex==4){
+                seats+="/";
+                thirdClassCheckIndex=1;
+            }else{
+                thirdClassCheckIndex++;
+            }
+        }
 
         layout = findViewById(R.id.layoutSeat);
 
@@ -106,7 +144,7 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
                 layout.addView(view);
                 seatViewList.add(view);
                 view.setOnClickListener(this);
-            } else if (seats.charAt(index) == 'A') {
+            } else if (seats.charAt(index) == 'A' || seats.charAt(index) == 'B' || seats.charAt(index) == 'C') {
                 count++;
                 TextView view = new TextView(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(seatSize, seatSize);
@@ -115,7 +153,7 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
                 view.setPadding(0, 0, 0, 2 * seatGaping);
                 view.setId(count);
                 view.setGravity(Gravity.CENTER);
-                view.setBackgroundResource(R.drawable.ic_seats_book);
+                view.setBackgroundResource((seats.charAt(index) == 'A')?R.drawable.ic_seats_book_first_class:((seats.charAt(index) == 'B')?R.drawable.ic_seats_book_second_class:R.drawable.ic_seats_book_third_class));
                 view.setText(count + "");
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 9);
                 view.setTextColor(Color.BLACK);
