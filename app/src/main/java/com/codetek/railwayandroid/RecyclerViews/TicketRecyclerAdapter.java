@@ -47,14 +47,12 @@ public class TicketRecyclerAdapter extends RecyclerView.Adapter<TicketRecyclerAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title,subtitle,status;
-        private final ImageView viewButton;
 
         public ViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.row_ticket_title);
             subtitle =  view.findViewById(R.id.row_ticket_subtitle);
             status = view.findViewById(R.id.row_ticket_status);
-            viewButton=view.findViewById(R.id.row_ticket_view_button);
         }
 
         public TextView getTitle() {
@@ -69,8 +67,5 @@ public class TicketRecyclerAdapter extends RecyclerView.Adapter<TicketRecyclerAd
             return status;
         }
 
-        public ImageView getViewButton() {
-            return viewButton;
-        }
     }
 }

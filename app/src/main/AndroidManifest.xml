@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Railwayandroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Payments"
+            android:exported="false" />
+        <activity
             android:name=".SeatSelection"
             android:exported="false" />
         <activity

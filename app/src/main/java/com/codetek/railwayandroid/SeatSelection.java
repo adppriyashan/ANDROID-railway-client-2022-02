@@ -2,6 +2,7 @@ package com.codetek.railwayandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -21,34 +22,22 @@ import java.util.List;
 
 public class SeatSelection extends AppCompatActivity  implements View.OnClickListener {
     ViewGroup layout;
-
     ImageView backbtn;
-
     Button confirmationButton;
-
-    //U - not available
-    //A - Available
-    //R Reserved
-    //_ Space
-
     String seats = "";
-
     List<TextView> seatViewList = new ArrayList<>();
     int seatSize = 100;
     int seatGaping = 10;
-
     int STATUS_AVAILABLE = 1;
     int STATUS_BOOKED = 2;
     int STATUS_RESERVED = 3;
     String selectedIds = "";
+    public double total=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
-
-        for (int val:CustomUtils.selectedTrain.getBooked()){
-            System.out.println(val);
-        }
 
         backbtn=findViewById(R.id.seats_back);
         confirmationButton=findViewById(R.id.seat_booking_confirmation);
@@ -56,7 +45,23 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
         confirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(selectedIds);
+                total=0;
+                String[] selectedIdsArray=selectedIds.split(",");
+                for (String seat:selectedIdsArray){
+                    if(Integer.parseInt(seat)<=CustomUtils.selectedTrain.getFirstclass()){
+                        total+=CustomUtils.selectedTrain.getClass1price();
+                    }else if(Integer.parseInt(seat)<=CustomUtils.selectedTrain.getSecondclass()){
+                        total+=CustomUtils.selectedTrain.getClass2price();
+                    }else if(Integer.parseInt(seat)<=CustomUtils.selectedTrain.getThirdclass()){
+                        total+=CustomUtils.selectedTrain.getClass3price();
+                    }
+                }
+
+                Intent paymentConfirmation=new Intent(SeatSelection.this,Payments.class);
+                paymentConfirmation.putExtra("date",getIntent().getStringExtra("date"));
+                paymentConfirmation.putExtra("seats",selectedIdsArray);
+                paymentConfirmation.putExtra("total",total+"");
+                startActivity(paymentConfirmation);
             }
         });
 
@@ -67,9 +72,17 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
             }
         });
 
+        int seatNoIndex=0;
         int firstClassCheckIndex=1;
         for (int firstClasses=0;firstClasses<CustomUtils.selectedTrain.getFirstclass();firstClasses++){
-            seats+="A";
+
+            if(CustomUtils.selectedTrain.getBooked().contains( seatNoIndex)){
+                seats+="R";
+            }else{
+                seats+="A";
+            }
+
+
             if(firstClassCheckIndex==2){
                 seats+="__";
             }
@@ -79,12 +92,17 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
             }else{
                 firstClassCheckIndex++;
             }
+            seatNoIndex++;
         }
         seats+="/";
         seats+="/";
         int secondClassCheckIndex=1;
         for (int secondClasses=0;secondClasses<CustomUtils.selectedTrain.getSecondclass();secondClasses++){
-            seats+="B";
+            if(CustomUtils.selectedTrain.getBooked().contains( seatNoIndex)){
+                seats+="R";
+            }else{
+                seats+="B";
+            }
             if(secondClassCheckIndex==2){
                 seats+="__";
             }
@@ -94,12 +112,17 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
             }else{
                 secondClassCheckIndex++;
             }
+            seatNoIndex++;
         }
         seats+="/";
         seats+="/";
         int thirdClassCheckIndex=1;
         for (int thirdClasses=0;thirdClasses<CustomUtils.selectedTrain.getThirdclass();thirdClasses++){
-            seats+="C";
+            if(CustomUtils.selectedTrain.getBooked().contains( seatNoIndex)){
+                seats+="R";
+            }else{
+                seats+="C";
+            }
             if(thirdClassCheckIndex==2){
                 seats+="__";
             }
@@ -109,6 +132,7 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
             }else{
                 thirdClassCheckIndex++;
             }
+            seatNoIndex++;
         }
 
         layout = findViewById(R.id.layoutSeat);

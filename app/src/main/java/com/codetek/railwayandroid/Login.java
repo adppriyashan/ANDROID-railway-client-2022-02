@@ -106,7 +106,6 @@ public class Login extends AppCompatActivity  implements Validator.ValidationLis
                         }else{
                             runOnUiThread(new Runnable() {
                                 public void run() {
-                                    progress.hide();
                                     Toast.makeText(Login.this,"Unauthorized Credentials",Toast.LENGTH_SHORT).show();
                                 }
                             });
