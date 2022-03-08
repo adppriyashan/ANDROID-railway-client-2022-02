@@ -13,6 +13,9 @@ public class Train {
     private int firstclass;
     private int secondclass;
     private int thirdclass;
+    private double class1price,class2price,class3price;
+    private ArrayList<Integer> booked;
+
     private ArrayList<Schedule> schedules;
 
     public int getId() {
@@ -57,5 +60,21 @@ public class Train {
 
     public ArrayList<Schedule> getSchedules() {
         return schedules;
+    }
+
+    public double getClass1price() {
+        return class1price;
+    }
+
+    public double getClass2price() {
+        return class2price;
+    }
+
+    public double getClass3price() {
+        return class3price;
+    }
+
+    public ArrayList<Integer> getBooked() {
+        return booked;
     }
 }

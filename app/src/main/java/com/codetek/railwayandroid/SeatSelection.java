@@ -46,6 +46,10 @@ public class SeatSelection extends AppCompatActivity  implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
 
+        for (int val:CustomUtils.selectedTrain.getBooked()){
+            System.out.println(val);
+        }
+
         backbtn=findViewById(R.id.seats_back);
         confirmationButton=findViewById(R.id.seat_booking_confirmation);
 
